@@ -2,7 +2,7 @@
 
 **Deployment:** `(client_only)`
 
-**Version:** `1.1.0`
+**Version:** `1.5.2`
 
 **Platform:** EFT 16.9 / SPT 4.0.13 / Fika 2.3.x
 

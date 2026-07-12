@@ -3,10 +3,6 @@ using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using Fika.Core.Main.Players;
-using Fika.Core.Main.BotClasses;
-using EFT;
-using EFT.InventoryLogic;
 
 namespace FikaWeaponPickupFix
 {
@@ -22,12 +18,12 @@ namespace FikaWeaponPickupFix
             Log = Logger;
             _harmony = new Harmony(PluginInfo.GUID);
 
-            // Patch 1: Cleanup bot hands controller when bot dies
-            ApplyPatch(typeof(Patches.BotDeadCleanupPatch));
-            // Patch 2: Cleanup orphaned bot controllers when player picks up weapon
+            // Patch Player.Proceed (base class) to catch ALL weapon equip calls.
+            // When the local player equips a weapon, clean up orphaned FirearmControllers
+            // from other players referencing the same weapon.
             ApplyPatch(typeof(Patches.PlayerWeaponPickupPatch));
 
-            Log.LogInfo($"[{PluginInfo.NAME}] v{PluginInfo.VERSION} loaded (2 patches)");
+            Log.LogInfo($"[{PluginInfo.NAME}] v{PluginInfo.VERSION} loaded (1 patch)");
         }
 
         private void ApplyPatch(Type patchType)

@@ -7,9 +7,9 @@
     <LangVersion>latest</LangVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <Version>1.1.0</Version>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.5.2</Version>
+    <AssemblyVersion>1.5.2.0</AssemblyVersion>
+    <FileVersion>1.5.2.0</FileVersion>
     <Product>Fika Weapon Pickup Fix</Product>
     <Description>Fixes hands breaking when picking up weapons from dead bots in Fika coop</Description>
     <Charset>utf-8</Charset>
@@ -63,7 +63,6 @@
   <ItemGroup>
     <Compile Include="src\PluginInfo.cs" />
     <Compile Include="src\PluginCore.cs" />
-    <Compile Include="src\Patches\BotDeadCleanupPatch.cs" />
     <Compile Include="src\Patches\PlayerWeaponPickupPatch.cs" />
   </ItemGroup>
 
