@@ -123,15 +123,32 @@ namespace FikaWeaponPickupFix.Patches
                     $"[FIKA_PICKUP_FIX] Pre-Proceed state: currentHandsController={currentHcType} " +
                     $"currentItem={currentHcItem?.ShortName ?? "null"}({currentHcItem?.Id ?? "null"})");
 
-                // Force cleanup: destroy non-firearm HandsController before Proceed
-                // This prevents deadlock when switching from knife/meds to weapon
-                if (PluginCore.ForceCleanupBeforeProceed.Value
-                    && currentHc != null
-                    && !(currentHc is Player.FirearmController))
+                // Force cleanup: destroy HandsController before Proceed to prevent Fika deadlock.
+                // Cases: knife/meds → weapon, or weapon_A → weapon_B
+                if (PluginCore.ForceCleanupBeforeProceed.Value && currentHc != null)
                 {
-                    PluginCore.Log.LogWarning(
-                        $"[FIKA_PICKUP_FIX] FORCE CLEANUP: destroying {currentHcType} before Proceed");
-                    FullCleanup(__instance, currentHc);
+                    bool needsCleanup = false;
+                    string reason = "";
+
+                    if (!(currentHc is Player.FirearmController))
+                    {
+                        // Non-firearm (knife, meds, grenades, empty) → weapon
+                        needsCleanup = true;
+                        reason = $"non-firearm ({currentHcType})";
+                    }
+                    else if (currentHcItem != null && currentHcItem.Id != wId)
+                    {
+                        // Different weapon in hands → switch to new weapon
+                        needsCleanup = true;
+                        reason = $"different weapon ({currentHcItem.ShortName} → {weaponName})";
+                    }
+
+                    if (needsCleanup)
+                    {
+                        PluginCore.Log.LogWarning(
+                            $"[FIKA_PICKUP_FIX] FORCE CLEANUP: {reason}, destroying {currentHcType}");
+                        FullCleanup(__instance, currentHc);
+                    }
                 }
             }
             catch (Exception ex)

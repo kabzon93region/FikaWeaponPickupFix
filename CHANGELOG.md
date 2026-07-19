@@ -1,4 +1,9 @@
-﻿## 1.7.0 (2026-07-19)
+﻿## 1.7.1 (2026-07-19)
+
+- `ForceCleanupBeforeProceed` now also handles weapon-to-weapon switching (weapon_A → weapon_B)
+- Cleanup triggers for: non-firearm controllers AND different weapon in FirearmController
+
+## 1.7.0 (2026-07-19)
 
 - **New config option `ForceCleanupBeforeProceed`** (default: OFF). When enabled, destroys the current HandsController (knife/meds/empty) before weapon Proceed. Prevents Fika deadlock when switching to weapon from non-firearm state.
 - Toggle in BepInEx config (`com.dematch.fikaweaponpickupfix.cfg`) under `[Fix]` section.
