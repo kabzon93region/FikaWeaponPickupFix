@@ -3,6 +3,7 @@ using System.Reflection;
 using Comfort.Common;
 using EFT;
 using EFT.InventoryLogic;
+using Fika.Core.Main.Players;
 using HarmonyLib;
 using UnityEngine;
 
@@ -24,9 +25,10 @@ namespace FikaWeaponPickupFix.Patches
 
         public MethodBase GetTargetMethod()
         {
-            // Target Player.Proceed (base class) — catches ALL weapon equip calls
-            // regardless of whether the player is FikaPlayer, ObservedPlayer, etc.
-            return AccessTools.Method(typeof(Player), nameof(Player.Proceed),
+            // Target FikaPlayer.Proceed — the actual override that fires for local player.
+            // Player.Proceed (base) is never called because FikaPlayer overrides it
+            // without calling base.Proceed().
+            return AccessTools.Method(typeof(FikaPlayer), nameof(FikaPlayer.Proceed),
                 new[] { typeof(Weapon), typeof(Callback<IFirearmHandsController>), typeof(bool) });
         }
 

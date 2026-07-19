@@ -1,7 +1,10 @@
-﻿## 1.5.2 (2026-07-13)
+﻿## 1.6.0 (2026-07-19)
 
-- **Fixed: patch never fired.** Previous versions patched `FikaPlayer.Proceed` which was never called during weapon equip in practice. Now patches `Player.Proceed` (base class) — guaranteed to catch ALL weapon equip calls regardless of player type.
-- **Added prefix + postfix logging:** Logs player type, `IsYourPlayer`, weapon ID, current/proceed HandsController state before and after every Proceed call. Enables diagnosis of "broken hands" root cause.
+- **Fixed: patch target corrected.** v1.5.2 patched `Player.Proceed` (base class) which is NEVER called because `FikaPlayer` overrides it without calling `base.Proceed()`. Now patches `FikaPlayer.Proceed` directly — this is the actual method that fires for local player weapon equip.
+
+## 1.5.2 (2026-07-13)
+
+- Added prefix + postfix logging for diagnosis of "broken hands" root cause.
 
 ## 1.5.1 (2026-07-12)
 
