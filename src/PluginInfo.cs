@@ -4,6 +4,6 @@
     {
         public const string GUID = "com.dematch.fikaweaponpickupfix";
         public const string NAME = "Fika Weapon Pickup Fix";
-        public const string VERSION = "1.6.0";
+        public const string VERSION = "1.7.0";
     }
 }

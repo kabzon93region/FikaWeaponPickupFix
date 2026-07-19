@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 
@@ -11,12 +12,18 @@ namespace FikaWeaponPickupFix
     public class PluginCore : BaseUnityPlugin
     {
         internal static ManualLogSource Log;
+        internal static ConfigEntry<bool> ForceCleanupBeforeProceed;
         private Harmony _harmony;
 
         private void Awake()
         {
             Log = Logger;
             _harmony = new Harmony(PluginInfo.GUID);
+
+            ForceCleanupBeforeProceed = Config.Bind(
+                "Fix", "ForceCleanupBeforeProceed", false,
+                "EXPERIMENTAL: Destroy current HandsController before weapon Proceed. " +
+                "Fixes deadlock when switching from knife/meds to weapon. Toggle off if issues.");
 
             // Patch Player.Proceed (base class) to catch ALL weapon equip calls.
             // When the local player equips a weapon, clean up orphaned FirearmControllers

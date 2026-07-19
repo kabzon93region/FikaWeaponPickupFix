@@ -122,6 +122,17 @@ namespace FikaWeaponPickupFix.Patches
                 PluginCore.Log.LogInfo(
                     $"[FIKA_PICKUP_FIX] Pre-Proceed state: currentHandsController={currentHcType} " +
                     $"currentItem={currentHcItem?.ShortName ?? "null"}({currentHcItem?.Id ?? "null"})");
+
+                // Force cleanup: destroy non-firearm HandsController before Proceed
+                // This prevents deadlock when switching from knife/meds to weapon
+                if (PluginCore.ForceCleanupBeforeProceed.Value
+                    && currentHc != null
+                    && !(currentHc is Player.FirearmController))
+                {
+                    PluginCore.Log.LogWarning(
+                        $"[FIKA_PICKUP_FIX] FORCE CLEANUP: destroying {currentHcType} before Proceed");
+                    FullCleanup(__instance, currentHc);
+                }
             }
             catch (Exception ex)
             {

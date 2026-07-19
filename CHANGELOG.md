@@ -1,4 +1,9 @@
-﻿## 1.6.0 (2026-07-19)
+﻿## 1.7.0 (2026-07-19)
+
+- **New config option `ForceCleanupBeforeProceed`** (default: OFF). When enabled, destroys the current HandsController (knife/meds/empty) before weapon Proceed. Prevents Fika deadlock when switching to weapon from non-firearm state.
+- Toggle in BepInEx config (`com.dematch.fikaweaponpickupfix.cfg`) under `[Fix]` section.
+
+## 1.6.0 (2026-07-19)
 
 - **Fixed: patch target corrected.** v1.5.2 patched `Player.Proceed` (base class) which is NEVER called because `FikaPlayer` overrides it without calling `base.Proceed()`. Now patches `FikaPlayer.Proceed` directly — this is the actual method that fires for local player weapon equip.
 
