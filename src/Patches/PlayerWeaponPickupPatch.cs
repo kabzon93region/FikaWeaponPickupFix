@@ -123,31 +123,45 @@ namespace FikaWeaponPickupFix.Patches
                     $"[FIKA_PICKUP_FIX] Pre-Proceed state: currentHandsController={currentHcType} " +
                     $"currentItem={currentHcItem?.ShortName ?? "null"}({currentHcItem?.Id ?? "null"})");
 
-                // Force cleanup: destroy HandsController before Proceed to prevent Fika deadlock.
-                // Cases: knife/meds → weapon, or weapon_A → weapon_B
-                if (PluginCore.ForceCleanupBeforeProceed.Value && currentHc != null)
+                // FastForward: complete pending operations on current HandsController
+                // so Process<> pipeline can cleanly transition to the new weapon.
+                if (PluginCore.ForceCleanupBeforeProceed.Value && currentHc != null
+                    && currentHc is Player.AbstractHandsController ahc)
                 {
-                    bool needsCleanup = false;
+                    bool needsFastForward = false;
                     string reason = "";
 
                     if (!(currentHc is Player.FirearmController))
                     {
-                        // Non-firearm (knife, meds, grenades, empty) → weapon
-                        needsCleanup = true;
+                        needsFastForward = true;
                         reason = $"non-firearm ({currentHcType})";
                     }
                     else if (currentHcItem != null && currentHcItem.Id != wId)
                     {
-                        // Different weapon in hands → switch to new weapon
-                        needsCleanup = true;
+                        needsFastForward = true;
                         reason = $"different weapon ({currentHcItem.ShortName} → {weaponName})";
                     }
 
-                    if (needsCleanup)
+                    if (needsFastForward)
                     {
                         PluginCore.Log.LogWarning(
-                            $"[FIKA_PICKUP_FIX] FORCE CLEANUP: {reason}, destroying {currentHcType}");
-                        FullCleanup(__instance, currentHc);
+                            $"[FIKA_PICKUP_FIX] FAST FORWARD: {reason}");
+                        try
+                        {
+                            int iterations = 0;
+                            var before = ahc;
+                            ahc.FastForwardCurrentState();
+                            while (iterations++ < 5 && !ReferenceEquals(ahc, before))
+                            {
+                                before = ahc;
+                                ahc.FastForwardCurrentState();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            PluginCore.Log.LogWarning(
+                                $"[FIKA_PICKUP_FIX] FastForward error: {ex.Message}");
+                        }
                     }
                 }
             }
