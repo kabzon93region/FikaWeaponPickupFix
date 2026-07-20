@@ -33,6 +33,11 @@ namespace FikaWeaponPickupFix
             Log.LogInfo($"[{PluginInfo.NAME}] v{PluginInfo.VERSION} loaded (1 patch)");
         }
 
+        private void Update()
+        {
+            Patches.PlayerWeaponPickupPatch.MonitorUpdate();
+        }
+
         private void ApplyPatch(Type patchType)
         {
             try

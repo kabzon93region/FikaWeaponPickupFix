@@ -1,4 +1,9 @@
-﻿## 1.7.1 (2026-07-19)
+﻿## 1.7.2 (2026-07-19)
+
+- **Replaced Destroy with FastForward**: Previous versions destroyed HandsController before Proceed, which corrupted the animation pipeline. Now calls `FastForwardCurrentState()` to cleanly complete pending operations, allowing Process<> to transition properly.
+- Config option `ForceCleanupBeforeProceed` still required to enable.
+
+## 1.7.1 (2026-07-19)
 
 - `ForceCleanupBeforeProceed` now also handles weapon-to-weapon switching (weapon_A → weapon_B)
 - Cleanup triggers for: non-firearm controllers AND different weapon in FirearmController
