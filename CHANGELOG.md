@@ -1,4 +1,8 @@
-﻿## 1.7.4 (2026-07-20)
+﻿## 1.7.5 (2026-07-20)
+
+- **IK diagnostics**: After weapon switch completes, logs weapon transform parent chain, ProceduralWeaponAnimation state (hands position/rotation, overlap depth), and warns if weapon is not parented to the player.
+
+## 1.7.4 (2026-07-20)
 
 - **Removed FastForward**: FastForwardCurrentState() before Proceed was corrupting weapon animation/IK state, causing "noodle arms" and floating weapon. Monitor + timeout retry handles stuck transitions without FastForward.
 

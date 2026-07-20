@@ -180,6 +180,64 @@ namespace FikaWeaponPickupFix.Patches
             {
                 PluginCore.Log.LogInfo(
                     $"[FIKA_PICKUP_FIX] MONITOR: switch completed after {elapsed:F1}s");
+
+                // Diagnostic: check weapon transform and IK state after switch
+                try
+                {
+                    var fc = hc as Player.FirearmController;
+                    if (fc != null)
+                    {
+                        var controllerObj = fc.ControllerGameObject;
+                        var weaponPrefab = controllerObj?.GetComponent<WeaponPrefab>();
+                        var weaponGO = weaponPrefab?.gameObject;
+                        var parent = weaponGO?.transform?.parent;
+                        var parentName = parent?.name ?? "null";
+                        var parentParent = parent?.parent?.name ?? "null";
+
+                        PluginCore.Log.LogInfo(
+                            $"[FIKA_PICKUP_FIX] DIAG: weaponGO={weaponGO?.name ?? "null"} " +
+                            $"parent={parentName} grandParent={parentParent} " +
+                            $"controllerGO={controllerObj?.name ?? "null"}");
+
+                        // Check if weapon is parented to the player's hands hierarchy
+                        if (parent != null)
+                        {
+                            bool isPlayerChild = false;
+                            var check = parent;
+                            for (int i = 0; i < 10 && check != null; i++)
+                            {
+                                if (check.gameObject == _monitoredPlayer.gameObject)
+                                {
+                                    isPlayerChild = true;
+                                    break;
+                                }
+                                check = check.parent;
+                            }
+                            if (!isPlayerChild)
+                            {
+                                PluginCore.Log.LogWarning(
+                                    $"[FIKA_PICKUP_FIX] DIAG: WEAPON NOT PARENTED TO PLAYER! " +
+                                    $"parent={parentName}");
+                            }
+                        }
+
+                        // Check ProceduralWeaponAnimation
+                        var pwa = _monitoredPlayer.ProceduralWeaponAnimation;
+                        if (pwa != null)
+                        {
+                            var handsPos = pwa.HandsContainer?.HandsPosition?.Get();
+                            var handsRot = pwa.HandsContainer?.HandsRotation?.Get();
+                            PluginCore.Log.LogInfo(
+                                $"[FIKA_PICKUP_FIX] DIAG: PWA handsPos={handsPos} handsRot={handsRot} " +
+                                $"overlap={pwa.TurnAway?.OverlapDepth ?? -1f}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    PluginCore.Log.LogWarning($"[FIKA_PICKUP_FIX] DIAG error: {ex.Message}");
+                }
+
                 _monitoring = false;
                 return;
             }
