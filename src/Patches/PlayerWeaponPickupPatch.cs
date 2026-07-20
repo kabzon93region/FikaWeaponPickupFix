@@ -110,30 +110,6 @@ namespace FikaWeaponPickupFix.Patches
                     $"[FIKA_PICKUP_FIX] Pre-Proceed: hc={currentHcType} " +
                     $"item={currentHcItem?.ShortName ?? "null"}({currentHcItem?.Id ?? "null"}) " +
                     $"cleaned={cleanedCount}");
-
-                // FastForward: let current controller finish its operation cleanly
-                if (PluginCore.ForceCleanupBeforeProceed.Value
-                    && currentHc != null
-                    && currentHc is Player.AbstractHandsController ahc)
-                {
-                    bool needsFF = !(currentHc is Player.FirearmController)
-                        || (currentHcItem != null && currentHcItem.Id != wId);
-
-                    if (needsFF)
-                    {
-                        PluginCore.Log.LogWarning(
-                            $"[FIKA_PICKUP_FIX] FAST FORWARD: {currentHcType}");
-                        try
-                        {
-                            ahc.FastForwardCurrentState();
-                        }
-                        catch (Exception ex)
-                        {
-                            PluginCore.Log.LogWarning(
-                                $"[FIKA_PICKUP_FIX] FastForward error: {ex.Message}");
-                        }
-                    }
-                }
             }
             catch (Exception ex)
             {

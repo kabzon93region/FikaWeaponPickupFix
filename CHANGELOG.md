@@ -1,4 +1,8 @@
-﻿## 1.7.3 (2026-07-20)
+﻿## 1.7.4 (2026-07-20)
+
+- **Removed FastForward**: FastForwardCurrentState() before Proceed was corrupting weapon animation/IK state, causing "noodle arms" and floating weapon. Monitor + timeout retry handles stuck transitions without FastForward.
+
+## 1.7.3 (2026-07-20)
 
 - **HandsController monitor**: After Proceed, monitors if HandsController actually switched to the target weapon. If not within 2 seconds, force-destroys old controller and retries Proceed (up to 2 retries).
 - This replaces the previous "hope FastForward works" approach with active monitoring and recovery.
