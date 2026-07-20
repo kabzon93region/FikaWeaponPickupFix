@@ -1,4 +1,11 @@
-﻿## 1.7.5 (2026-07-20)
+﻿## 2.0.0 (2026-07-20)
+
+- **Complete rewrite**: Removed Proceed patch entirely. Previous versions patched `FikaPlayer.Proceed` which caused deadlocks and IK corruption in Fika's weapon equip pipeline.
+- **Timer-based orphan cleanup**: Scans every 3 seconds for dead players whose HandsController references a weapon now in the local player's inventory. Destroys orphaned controllers to prevent state conflicts.
+- **No Harmony patches**: Zero interference with Fika's native weapon equip flow.
+- **No config required**: Works automatically without any configuration.
+
+## 1.7.5 (2026-07-20)
 
 - **IK diagnostics**: After weapon switch completes, logs weapon transform parent chain, ProceduralWeaponAnimation state (hands position/rotation, overlap depth), and warns if weapon is not parented to the player.
 
