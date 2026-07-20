@@ -1,4 +1,10 @@
-﻿## 1.7.2 (2026-07-19)
+﻿## 1.7.3 (2026-07-20)
+
+- **HandsController monitor**: After Proceed, monitors if HandsController actually switched to the target weapon. If not within 2 seconds, force-destroys old controller and retries Proceed (up to 2 retries).
+- This replaces the previous "hope FastForward works" approach with active monitoring and recovery.
+- Config option `ForceCleanupBeforeProceed` still required to enable.
+
+## 1.7.2 (2026-07-19)
 
 - **Replaced Destroy with FastForward**: Previous versions destroyed HandsController before Proceed, which corrupted the animation pipeline. Now calls `FastForwardCurrentState()` to cleanly complete pending operations, allowing Process<> to transition properly.
 - Config option `ForceCleanupBeforeProceed` still required to enable.
